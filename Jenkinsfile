@@ -1,68 +1,55 @@
 pipeline {
     agent any
     
-    environment {
-        // Define environment variables
-        VUE_APP_API_URL = 'http://127.0.0.1:32504/api'
-        VUE_APP_ENV = 'production'
-    }
-    
     stages {
-        stage('Checkout') {
-            steps {
-                checkout scm
+        stage('Build with Node.js') {
+            agent {
+                docker {
+                    image 'node:16-alpine'
+                    // This runs the steps inside a Node.js container
+                }
             }
-        }
-        
-        stage('Node Version') {
-            steps {
-                // Just check if Node.js is available on the system
-                sh 'node --version || echo "Node.js not found, please install Node.js on the Jenkins server"'
-                sh 'npm --version || echo "npm not found, please install npm on the Jenkins server"'
+            
+            environment {
+                // Define environment variables
+                VUE_APP_API_URL = 'http://127.0.0.1:32504/api'
+                VUE_APP_ENV = 'production'
             }
-        }
-        
-        stage('Install Dependencies') {
+            
             steps {
-                // Run npm install and report any errors
+                // Check versions
+                sh 'node --version'
+                sh 'npm --version'
+                
+                // Install dependencies
                 sh 'npm install'
-            }
-        }
-        
-        stage('Lint') {
-            steps {
-                // Run linting if your project has it set up
+                
+                // Run linting
                 sh 'npm run lint || echo "Linting not configured"'
-            }
-        }
-        
-        stage('Test') {
-            steps {
-                // Run tests if your project has them set up
+                
+                // Run tests
                 sh 'npm run test:unit || echo "Tests not configured"'
-            }
-        }
-        
-        stage('Configure Environment') {
-            steps {
-                // Create a .env.production.local file for the build
+                
+                // Configure environment
                 sh '''
                 echo "VUE_APP_API_URL=http://127.0.0.1:32504/api" > .env.production.local
                 echo "VUE_APP_ENV=production" >> .env.production.local
                 '''
-            }
-        }
-        
-        stage('Build') {
-            steps {
-                // Create production build
+                
+                // Build
                 sh 'npm run build'
+                
+                // Archive artifacts (this will copy them out of the container)
+                stash includes: 'dist/**', name: 'dist'
             }
         }
         
         stage('Archive') {
             steps {
-                // Archive the built artifacts
+                // Restore artifacts from the Docker container
+                unstash 'dist'
+                
+                // Archive them
                 archiveArtifacts artifacts: 'dist/**', fingerprint: true
             }
         }
