@@ -6,6 +6,12 @@ pipeline {
         }
     }
     
+    environment {
+        // Define environment variables
+        NODE_ENV = 'production'
+        VUE_APP_API_URL = 'http://127.0.0.1:32504/api'
+    }
+    
     stages {
         stage('Install Dependencies') {
             steps {
@@ -22,6 +28,16 @@ pipeline {
         stage('Test') {
             steps {
                 sh 'npm run test:unit'
+            }
+        }
+        
+        stage('Configure Environment') {
+            steps {
+                // Create a .env.production.local file that will override the default .env.production
+                sh '''
+                echo "VUE_APP_API_URL=http://127.0.0.1:32504/api" > .env.production.local
+                echo "VUE_APP_ENV=production" >> .env.production.local
+                '''
             }
         }
         
