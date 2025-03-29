@@ -1,11 +1,6 @@
 pipeline {
     agent any
     
-    // If you have the NodeJS plugin installed and configured, uncomment this section
-    // tools {
-    //     nodejs 'NodeJS'
-    // }
-    
     environment {
         // Define environment variables
         VUE_APP_API_URL = 'http://127.0.0.1:32504/api'
@@ -19,16 +14,11 @@ pipeline {
             }
         }
         
-        stage('Setup Node.js') {
+        stage('Node Version') {
             steps {
-                // This is a fallback if the NodeJS plugin isn't available
-                // Adjust the Node.js version as needed
-                script {
-                    def nodeHome = tool name: 'NodeJS', type: 'jenkins.plugins.nodejs.tools.NodeJSInstallation'
-                    env.PATH = "${nodeHome}/bin:${env.PATH}"
-                }
-                sh 'node --version'
-                sh 'npm --version'
+                // Just check if Node.js is available on the system
+                sh 'node --version || echo "Node.js not found, please install Node.js on the Jenkins server"'
+                sh 'npm --version || echo "npm not found, please install npm on the Jenkins server"'
             }
         }
         
@@ -50,6 +40,16 @@ pipeline {
             steps {
                 // Run tests if your project has them set up
                 sh 'npm run test:unit || echo "Tests not configured"'
+            }
+        }
+        
+        stage('Configure Environment') {
+            steps {
+                // Create a .env.production.local file for the build
+                sh '''
+                echo "VUE_APP_API_URL=http://127.0.0.1:32504/api" > .env.production.local
+                echo "VUE_APP_ENV=production" >> .env.production.local
+                '''
             }
         }
         
