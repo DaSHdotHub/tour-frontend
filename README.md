@@ -58,7 +58,7 @@ pipeline {
     }
     
     environment {
-        VUE_APP_API_URL = 'http://127.0.0.1:32504/api'
+        VUE_APP_API_URL = 'http://127.0.0.1:32505/api'
         VUE_APP_ENV = 'production'
     }
     
@@ -98,7 +98,7 @@ pipeline {
         stage('Configure Environment') {
             steps {
                 sh '''
-                echo "VUE_APP_API_URL=http://127.0.0.1:32504/api" > .env.production.local
+                echo "VUE_APP_API_URL=http://127.0.0.1:32505/api" > .env.production.local
                 echo "VUE_APP_ENV=production" >> .env.production.local
                 '''
             }
@@ -238,14 +238,14 @@ On your host or proxy server:
 ```nginx
 server {
     listen 443 ssl;
-    server_name webapp.idilia.dscloud.me;
+    server_name [your outside address];
     
     # SSL configuration
     ssl_certificate /path/to/cert.pem;
     ssl_certificate_key /path/to/key.pem;
     
     location / {
-        proxy_pass http://192.168.178.157:32505;
+        proxy_pass [IP_OF_VM:32505];
         proxy_set_header Host $host;
         proxy_set_header X-Real-IP $remote_addr;
         proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
