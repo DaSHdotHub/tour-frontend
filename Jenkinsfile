@@ -8,7 +8,7 @@ pipeline {
 
     environment {
         // Define environment variables
-        VUE_APP_API_URL = 'http://127.0.0.1:32504/api'
+        VUE_APP_API_URL = 'http://127.0.0.1:32505/api'
         VUE_APP_ENV = 'production'
     }
 
@@ -48,7 +48,7 @@ pipeline {
         stage('Configure Environment') {
             steps {
                 sh '''
-                echo "VUE_APP_API_URL=http://127.0.0.1:32504/api" > .env.production.local
+                echo "VUE_APP_API_URL=http://127.0.0.1:32505/api" > .env.production.local
                 echo "VUE_APP_ENV=production" >> .env.production.local
                 '''
             }
