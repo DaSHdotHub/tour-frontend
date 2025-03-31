@@ -4,8 +4,8 @@
     
     <div class="container">
       <div class="home-content">
-        <h1 class="home-title">Welcome to Tour</h1>
-        <p class="home-subtitle">Create documents as you need them!</p>
+        <h1 class="home-title">Welcome to IdiliaSoft</h1>
+        <p class="home-subtitle">Track your projects like never before</p>
         
         <div class="action-buttons">
           <router-link v-if="!isAuthenticated" to="/signin" class="btn btn-primary btn-lg">Sign In</router-link>
@@ -35,10 +35,8 @@
 </template>
 
 <script>
-import TheNavbar from '@/components/TheNavbar.vue'
-import TheFooter from '@/components/TheFooter.vue'
-import { mapGetters } from 'vuex'
-
+import TheNavbar from '../components/TheNavbar.vue'
+import TheFooter from '../components/TheFooter.vue'
 export default {
   name: 'HomeView',
   components: {
@@ -46,7 +44,9 @@ export default {
     TheFooter
   },
   computed: {
-    ...mapGetters(['isAuthenticated'])
+    isAuthenticated() {
+      return this.$store.getters.isAuthenticated
+    }
   }
 }
 </script>

@@ -5,15 +5,15 @@
         <div class="social-links">
           <a href="https://linkedin.com/in/daniil-shaulov-87b5b2198" target="_blank" rel="noopener"
             aria-label="Visit my profile on LinkedIn (opens in a new tab)">
-            <font-awesome-icon :icon="['fab', 'linkedin']" class="icon fa-2x" />
+            <i class="fab fa-linkedin icon fa-2x"></i>
           </a>
           <a href="https://github.com/DaSHdotHub?tab=repositories" target="_blank" rel="noopener"
             aria-label="Visit my GitHub page (opens in a new tab)">
-            <font-awesome-icon :icon="['fab', 'github']" class="icon fa-2x" />
+            <i class="fab fa-github icon fa-2x"></i>
           </a>
           <a href="https://xing.com/profile/Daniil_Shaulov/" target="_blank" rel="noopener"
             aria-label="Visit my profile on Xing (opens in a new tab)">
-            <font-awesome-icon :icon="['fab', 'xing']" class="icon fa-2x" />
+            <i class="fab fa-xing icon fa-2x"></i>
           </a>
         </div>
       </div>

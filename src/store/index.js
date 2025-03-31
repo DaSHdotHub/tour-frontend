@@ -1,18 +1,23 @@
-import { createStore } from 'vuex'
-
-export default createStore({
+// Simple state management without Vuex
+const store = {
   state: {
     user: JSON.parse(localStorage.getItem('user')) || null,
     isAuthenticated: localStorage.getItem('user') !== null
   },
+  
   getters: {
-    isAuthenticated: state => state.isAuthenticated,
-    currentUser: state => state.user
+    isAuthenticated() {
+      return store.state.isAuthenticated
+    },
+    currentUser() {
+      return store.state.user
+    }
   },
+  
   mutations: {
-    SET_USER(state, user) {
-      state.user = user
-      state.isAuthenticated = user !== null
+    SET_USER(user) {
+      store.state.user = user
+      store.state.isAuthenticated = user !== null
       
       if (user) {
         localStorage.setItem('user', JSON.stringify(user))
@@ -21,8 +26,9 @@ export default createStore({
       }
     }
   },
+  
   actions: {
-    login({ commit }, credentials) {
+    login(credentials) {
       // Here you would normally perform an API call to authenticate
       // For this example, we'll mock the login
       return new Promise((resolve) => {
@@ -32,20 +38,20 @@ export default createStore({
             email: credentials.email,
             name: 'Demo User'
           }
-          commit('SET_USER', user)
+          store.mutations.SET_USER(user)
           resolve(user)
         }, 1000)
       })
     },
     
-    logout({ commit }) {
+    logout() {
       return new Promise((resolve) => {
-        commit('SET_USER', null)
+        store.mutations.SET_USER(null)
         resolve()
       })
     },
     
-    register({ commit }, userData) {
+    register(userData) {
       // Here you would normally perform an API call to register
       // For this example, we'll mock the registration
       return new Promise((resolve) => {
@@ -55,12 +61,24 @@ export default createStore({
             email: userData.email,
             name: userData.name
           }
-          commit('SET_USER', user)
+          store.mutations.SET_USER(user)
           resolve(user)
         }, 1000)
       })
     }
-  },
-  modules: {
   }
-})
+}
+
+export default {
+  install(app) {
+    app.config.globalProperties.$store = {
+      state: store.state,
+      
+      getters: store.getters,
+      
+      dispatch(action, payload) {
+        return store.actions[action](payload)
+      }
+    }
+  }
+}

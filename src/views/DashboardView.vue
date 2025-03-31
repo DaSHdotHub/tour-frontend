@@ -1,7 +1,6 @@
 <script>
-import TheNavbar from '@/components/TheNavbar.vue'
-import TheFooter from '@/components/TheFooter.vue'
-import { mapGetters } from 'vuex'
+import TheNavbar from '../components/TheNavbar.vue'
+import TheFooter from '../components/TheFooter.vue'
 
 export default {
   name: 'DashboardView',
@@ -23,7 +22,9 @@ export default {
     }
   },
   computed: {
-    ...mapGetters(['currentUser']),
+    currentUser() {
+      return this.$store.getters.currentUser
+    },
     
     userInitials() {
       if (!this.currentUser || !this.currentUser.name) return '?'

@@ -1,7 +1,7 @@
 <template>
   <nav class="navbar navbar-expand-lg navbar-dark">
     <div class="container">
-      <router-link class="navbar-brand" to="/">Tour</router-link>
+      <router-link class="navbar-brand" to="/">IdiliaSoft</router-link>
       
       <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav" 
               aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
@@ -29,12 +29,12 @@
 </template>
 
 <script>
-import { mapGetters } from 'vuex'
-
 export default {
   name: 'TheNavbar',
   computed: {
-    ...mapGetters(['isAuthenticated'])
+    isAuthenticated() {
+      return this.$store.getters.isAuthenticated
+    }
   },
   methods: {
     logout() {
