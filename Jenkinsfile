@@ -65,6 +65,17 @@ pipeline {
                 archiveArtifacts artifacts: 'dist/**', fingerprint: true
             }
         }
+
+        stage('Deploy') {
+            steps {
+                // Build and run the container
+                sh 'docker build -t tour-frontend:latest .'
+                sh 'docker stop tour-frontend || true'
+                sh 'docker rm tour-frontend || true'
+                sh 'docker run -d -p 32505:80 --name tour-frontend tour-frontend:latest'
+                echo 'Deployed to webapp.idilia.dscloud.me:'
+            }
+        }
     }
 
     post {
